@@ -11,6 +11,11 @@ const newListInput = document.getElementById("new-list-input");
 const addListBtn = document.getElementById("add-list-btn");
 const deleteListBtn = document.getElementById("delete-list-btn");
 const priorityInput = document.getElementById("priority-input");
+const listViewBtn = document.getElementById("list-view-btn");
+const calendarViewBtn = document.getElementById("calendar-view-btn");
+const listViewContainer = document.getElementById("list-view-container");
+const calendarViewContainer = document.getElementById("calendar-view-container");
+const calendarEl = document.getElementById('calendar');
 
 let appState = {
     lists: [],
@@ -55,6 +60,9 @@ function render() {
     renderFilters(activeList);
     renderTasks(activeList);
     updateProgress(activeList);
+    if (!calendarViewContainer.classList.contains('hidden')) {
+        initializeCalendar();
+    }
 }
 
 // Renders the dropdown to switch between lists
@@ -172,7 +180,8 @@ function setUpEventListeners(){
                 dueDate: dateInput.value,
                 completed: false,
                 priority: priorityInput.value || "Medium",
-                completedDate: null // Initialize as null
+                completedDate: null ,// Initialize as null
+                notified: false
             };
         activeList.tasks.push(newTask);
         saveState();
@@ -288,9 +297,109 @@ function setUpEventListeners(){
             render();
         }
     });
+
+    // Inside setUpEventListeners()
+
+    listViewBtn.addEventListener("click", () => {
+        listViewContainer.classList.remove("hidden");
+        calendarViewContainer.classList.add("hidden");
+        listViewBtn.classList.add("active");
+        calendarViewBtn.classList.remove("active");
+    });
+
+    calendarViewBtn.addEventListener("click", () => {
+        calendarViewContainer.classList.remove("hidden");
+        listViewContainer.classList.add("hidden");
+        calendarViewBtn.classList.add("active");
+        listViewBtn.classList.remove("active");
+        
+        // Initialize or update the calendar when switching to its view
+        initializeCalendar();
+    });
 }
 
+// script.js (add these new functions anywhere in the global scope)
 
+// Asks the user for permission to show notifications
+function requestNotificationPermission() {
+    if ('Notification' in window) {
+        Notification.requestPermission().then(permission => {
+            if (permission === 'granted') {
+                console.log('Notification permission granted.');
+            }
+        });
+    }
+}
+
+// Checks all tasks in all lists for reminders
+function checkReminders() {
+    if (Notification.permission !== 'granted') return;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set to start of day
+
+    // Loop through EVERY list and EVERY task
+    appState.lists.forEach(list => {
+        list.tasks.forEach(task => {
+            const dueDate = new Date(task.dueDate);
+
+            // Check if the task is due today, is not complete, and we haven't notified for it yet
+            if (dueDate.getTime() === today.getTime() && !task.completed && !task.notified) {
+                
+                // Create and show the notification
+                new Notification('Study Planner Reminder', {
+                    body: `Task "${task.text}" from your "${list.name}" list is due today!`,
+                    icon: './favicon.ico' // Optional: add an icon
+                });
+
+                // Mark the task as notified to prevent spam
+                task.notified = true;
+            }
+        });
+    });
+    
+    // Since we might have changed the 'notified' flag, we should save the state
+    saveState();
+}
+
+// ---- CALENDAR VIEW SETUP ----
+// Make sure to include FullCalendar's CSS and JS in your HTML file for this to work
+// <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
+// <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
+let calendar; // This will hold the FullCalendar instance
+
+function initializeCalendar() {
+    const activeList = appState.lists.find(list => list.id === appState.activeListId);
+    if (!activeList) return;
+
+    // 1. Transform your task data into the format FullCalendar needs
+    const calendarEvents = activeList.tasks.map(task => ({
+        title: task.text,
+        start: task.dueDate,
+        allDay: true, // Treat tasks as all-day events on the calendar
+        extendedProps: { // Store original task for later use if needed
+            taskId: task.id
+        }
+    }));
+
+    // 2. If the calendar doesn't exist yet, create it
+    if (!calendar) {
+        calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek'
+            },
+            events: calendarEvents
+        });
+        calendar.render();
+    } else {
+        // 3. If it already exists, just update its events
+        calendar.removeAllEvents();
+        calendar.addEventSource(calendarEvents);
+    }
+}
 
 // ===================================
 //  INITIALIZATION
@@ -298,3 +407,8 @@ function setUpEventListeners(){
 loadState();
 render();
 setUpEventListeners();
+// Ask for permission as soon as the app loads
+requestNotificationPermission();
+
+// Check for reminders every minute (60000 milliseconds)
+setInterval(checkReminders, 60000);

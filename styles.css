@@ -226,6 +226,43 @@ h1 {
 #delete-list-btn:hover {
     transform: scale(1.2); /* A little pop effect on hover */
 }
+
+
+/* Hides elements */
+.hidden {
+    display: none !important;
+}
+
+/* View Switcher Styling */
+.view-switcher {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.view-btn {
+    padding: 8px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    background: #ecf0f1;
+    border: 1px solid #bdc3c7;
+    border-radius: 5px;
+}
+.view-btn.active {
+    background: #3498db;
+    color: white;
+    border-color: #3498db;
+}
+
+/* FullCalendar Customizations */
+#calendar {
+    margin-top: 20px;
+}
+.fc-event { /* Custom color for events */
+    background-color: #3498db !important;
+    border-color: #2980b9 !important;
+}
+
 /* =================================== */
 /* 2. Styles for Larger Screens        */
 /* =================================== */
