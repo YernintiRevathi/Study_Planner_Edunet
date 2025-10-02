@@ -1,0 +1,261 @@
+/* =================================== */
+/* 1. Mobile-First Base Styles         */
+/* =================================== */
+
+/* Basic Setup */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #f4f7f9;
+    color: #333;
+    margin: 0; /* Remove default browser margin */
+    padding: 10px; /* Use less padding on small screens */
+    box-sizing: border-box; /* Ensures padding doesn't add to the width */
+}
+
+.container {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto; /* Center the container */
+    background: #fff;
+    padding: 15px; /* Less padding on mobile */
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    font-size: 1.8rem; /* Slightly smaller on mobile */
+}
+
+/* Form Styling - Stacked vertically for mobile */
+#task-form {
+    display: flex;
+    flex-direction: column; /* Stack all form elements vertically */
+    gap: 12px; /* This creates space between the stacked items */
+    margin: 20px 0;
+}
+
+#task-form input, #task-form select, #task-form button {
+    width: 100%; /* Make all form elements take the full width */
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-sizing: border-box; /* Critical for 100% width to work with padding */
+}
+
+#task-form button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+#task-form button:hover { background-color: #2980b9; }
+
+/* Priority Styling */
+/* Adds a thick left border with a specific color for each priority */
+.task-item.priority-high {
+    border-left: 5px solid #e74c3c; /* Red */
+}
+.task-item.priority-medium {
+    border-left: 5px solid #f39c12; /* Orange */
+}
+.task-item.priority-low {
+    border-left: 5px solid #3498db; /* Blue */
+}
+/* Filter Buttons - Allow them to wrap */
+#filter-container {
+    margin: 20px 0;
+    display: flex;
+    flex-wrap: wrap; /* This is the magic! Buttons will wrap to the next line if space runs out. */
+    gap: 10px;
+}
+.filter-btn {
+    padding: 5px 15px;
+    cursor: pointer;
+    background: #ecf0f1;
+    border: 1px solid #bdc3c7;
+    border-radius: 5px;
+    transition: all 0.2s;
+}
+.filter-btn.active {
+    background: #3498db;
+    color: white;
+    border-color: #3498db;
+}
+
+/* Task List Styling */
+#task-list {
+    margin: 20px 0;
+    list-style: none;
+    padding: 0;
+}
+.task-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 10px; /* Slightly less horizontal padding */
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.2s;
+}
+.task-item:hover { background-color: #f9f9f9; }
+.task-item.completed .task-text-container {
+    text-decoration: line-through;
+    color: #95a5a6;
+}
+.task-item.overdue .task-date { color: #e74c3c; font-weight: bold; }
+
+.task-text-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    /* Prevent text from overflowing its container */
+    word-break: break-word;
+}
+.task-text { font-size: 1.1rem; }
+/* .task-details { font-size: 0.8rem; color: #7f8c8d; margin-top: 4px;} */
+.task-details {
+    display: flex; /* This is the key change */
+    align-items: center;
+    flex-wrap: wrap; /* Allows items to wrap on small screens */
+    gap: 15px; /* Creates a 15px gap between all items inside (category, due date, etc.) */
+    font-size: 0.8rem;
+    color: #7f8c8d;
+    margin-top: 4px;
+}
+.task-category {
+    background-color: #ecf0f1;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+.task-actions button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 5px;
+    margin-left: 5px;
+}
+.complete-button { color: #2ecc71; }
+.delete-button { color: #e74c3c; }
+
+/* Progress Bar */
+#progress-container { margin-bottom: 20px; }
+#progress-bar-outline {
+    width: 100%;
+    height: 20px;
+    background: #ecf0f1;
+    border-radius: 10px;
+    overflow: hidden;
+}
+#progress-bar {
+    width: 0%;
+    height: 100%;
+    background: #2ecc71;
+    border-radius: 10px;
+    transition: width 0.3s ease-in-out;
+}
+
+/* style.css - ADD THIS AT THE BOTTOM */
+
+/* List Manager Styling */
+.list-manager {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ecf0f1;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    flex-wrap: wrap; /* Allow wrapping on small screens */
+    gap: 10px;
+}
+
+.list-selector-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.list-selector-wrapper label {
+    font-weight: 500;
+}
+
+#list-selector {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.add-list-form {
+    display: flex;
+    gap: 5px;
+}
+
+#new-list-input {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+#add-list-btn {
+    padding: 0 12px;
+    font-size: 1.5rem;
+    background-color: #2ecc71;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* style.css - ADD THIS AT THE BOTTOM */
+
+/* Makes the delete button blend in and align with the selector */
+#delete-list-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem; /* Make the icon a nice size */
+    padding: 0 5px;
+    color: #e74c3c; /* A nice red color for delete actions */
+    transition: transform 0.2s;
+}
+
+#delete-list-btn:hover {
+    transform: scale(1.2); /* A little pop effect on hover */
+}
+/* =================================== */
+/* 2. Styles for Larger Screens        */
+/* =================================== */
+/* This @media query applies styles ONLY when the screen is 768px or wider. */
+@media (min-width: 768px) {
+    body {
+        padding: 20px; /* Restore larger padding on big screens */
+    }
+
+    .container {
+        padding: 25px; /* Restore larger padding */
+    }
+
+    h1 {
+        font-size: 2.2rem; /* Make the title bigger */
+    }
+
+    /* Change the form layout back to horizontal on desktop */
+    #task-form {
+        flex-direction: row; /* Go back to a side-by-side layout */
+        align-items: center;
+    }
+
+    /* Adjust widths for horizontal layout */
+    #task-form input[type="text"] {
+        flex-grow: 1; /* Allow the text input to take up most of the space */
+        width: auto;
+    }
+
+    #task-form select, #task-form input[type="date"], #task-form button {
+        width: auto; /* Allow these to shrink to their content size */
+    }
+}

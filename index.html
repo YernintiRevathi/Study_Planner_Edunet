@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <!-- <script src="script.js" defer></script> -->
+  <title>Smart Study Planner</title>
+</head>
+<body>
+  <h1>Smart Study Planner</h1>
+
+  <!-- Add this above your filter container -->
+    <div class="list-manager">
+        <div class="list-selector-wrapper">
+            <label for="list-selector">Current List:</label>
+            <select id="list-selector"></select>
+            <button id="delete-list-btn" title="Delete Current List">🗑️</button>
+        </div>
+        <div class="add-list-form">
+            <input type="text" id="new-list-input" placeholder="New list name...">
+            <button id="add-list-btn">+</button>
+        </div>
+    </div>
+    <div id="progress-container">
+    <p>Progress: <span id="progress-text">0/0</span></p>
+    <div id="progress-bar-outline">
+      <div id="progress-bar"></div>
+    </div>
+  </div>
+  <div id="filter-container">
+  </div>
+
+  <form id="task-form">
+    <input type="text" id="task-input" placeholder="Enter a new study task..." required>
+    <input type="date" id="date-input" required>
+    <input type="text" id="category-input" placeholder="Category (e.g., Reading)" >
+    <select id="priority-input" required>
+        <option value="Low">Low Priority</option>
+        <option value="Medium" selected>Medium Priority</option> <!-- Default -->
+        <option value="High">High Priority</option>
+    </select>
+    <button type="submit">Add Task</button>
+  </form>
+
+  <ul id="task-list">
+    <!-- Tasks will be rendered here by JavaScript -->
+  </ul>
+
+  <script src="script.js"></script>
+</body>
+</html>
